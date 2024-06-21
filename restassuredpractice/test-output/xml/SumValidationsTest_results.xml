@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="TestNGTest-1f7b029b-6ecd-424d-9055-b885b8ea85cb"
+           tests="1"
+           failures="0"
+           errors="0"
+           skipped="0"
+           time="1.478">
+    <properties></properties>
+
+
+
+            <testcase
+                name="sumOfCoursesTest"
+                time="1.478"
+                classname="SumValidationsTest">
+            </testcase>
+</testsuite>
