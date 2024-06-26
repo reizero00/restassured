@@ -1,6 +1,16 @@
 import static io.restassured.RestAssured.given;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.testng.Assert;
+
 import com.konias.files.JsonHelper;
+import com.konias.pojo.Api;
+import com.konias.pojo.Courses;
+import com.konias.pojo.GetCourseDetails;
+import com.konias.pojo.WebAutomation;
 
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
@@ -9,7 +19,7 @@ import io.restassured.path.json.JsonPath;
  * This class demonstrates how to use Rest Assured to authenticate with OAuth2
  * and retrieve course details.
  * 
- * @author Kaushal Kumar
+ * @author Kristoffer Onias
  */
 public class OauthTest {
 
@@ -23,47 +33,41 @@ public class OauthTest {
         RestAssured.baseURI = "https://rahulshettyacademy.com";
 
         // Create OAuth2 token
-        String oauthResponse = createOauthToken();
-        String accessToken = getAccessToken(oauthResponse);
+        String accessToken = createOauthToken();
 
         // Retrieve course details using the OAuth2 token
-        String courseDetails = getCourseDetails(accessToken);
+        GetCourseDetails courseDetails = getCourseDetails(accessToken);
 
         // Print the course details
-        System.out.println(courseDetails);
+        printCourseDetails(courseDetails);
+
+        String getSoapUICoursePrice = getPriceByCourseTitle(courseDetails, "SoapUI Webservices testing");
+
+        System.out.println("SoapUI Webservices testing price is:\n" + getSoapUICoursePrice);
+
+        String[] expectedWebApiCourseTitles = {"Selenium Webdriver Java", "Cypress", "Protractor"};
+
+        compareCourseTitles(getAllWebAutomationCourses(courseDetails), expectedWebApiCourseTitles);
     }
 
     /**
      * Creates an OAuth2 token using the client credentials grant type.
      * 
-     * @return OAuth2 response
+     * @return OAuth2 access token
      */
     private static String createOauthToken() {
         return given()
-                .formParams("client_id", "692183103107-p0m7ent2hk7suguv4vq22hjcfhcr43pj.apps.googleusercontent.com")
+                .formParams("client_id",
+                        "692183103107-p0m7ent2hk7suguv4vq22hjcfhcr43pj.apps.googleusercontent.com")
                 .formParams("client_secret", "erZOWM9g3UtwNRj340YYaK_W")
                 .formParams("grant_type", "client_credentials")
                 .formParams("scope", "trust")
-            .when()
+                .when()
                 .post("/oauthapi/oauth2/resourceOwner/token")
-            .then()
-                .assertThat()
-                .statusCode(200)
-                .extract().response().asString();
-    }
-
-    /**
-     * Extracts the access token from the OAuth2 response.
-     * 
-     * @param response OAuth2 response
-     * @return access token
-     */
-    private static String getAccessToken(String response) {
-        // Parse the response JSON
-        JsonPath responseJson = JsonHelper.stringToJson(response);
-        
-        // Extract the access token from the response
-        return responseJson.get("access_token");
+                .then()
+                .extract()
+                .jsonPath()
+                .get("access_token");
     }
 
     /**
@@ -72,15 +76,75 @@ public class OauthTest {
      * @param accessToken access token
      * @return course details
      */
-    private static String getCourseDetails(String accessToken) {
+    private static GetCourseDetails getCourseDetails(String accessToken) {
         return given()
                 .queryParams("access_token", accessToken)
-            .when()
+                .when()
                 .get("/oauthapi/getCourseDetails")
-            .then()
-                // .assertThat()
-                // .statusCode(200) // Broken on the test site. It's always passing 401
-                .extract().response().asString();
+                .as(GetCourseDetails.class);
+    }
+
+    /**
+     * Prints the course details.
+     * 
+     * @param courseDetails course details
+     */
+    private static void printCourseDetails(GetCourseDetails courseDetails) {
+        System.out.println(courseDetails);
+    }
+
+    /**
+     * Retrieves the price of a course by its title.
+     * 
+     * @param courseDetails course details
+     * @param courseTitle course title
+     * @return price of the course
+     */
+    private static String getPriceByCourseTitle(GetCourseDetails courseDetails, String courseTitle) {
+        List<Api> apiCoursesList = courseDetails.getCourses().getApi();
+
+        for (Api apiCourse : apiCoursesList) {
+            if (apiCourse.getCourseTitle().equalsIgnoreCase(courseTitle)) {
+                return apiCourse.getPrice();
+            }
+        }
+
+        throw new IllegalArgumentException("Course not found: " + courseTitle);
+    }
+
+    /**
+     * Retrieves the titles of all web automation courses.
+     * 
+     * @param courseDetails course details
+     * @return list of course titles
+     */
+    private static List<String> getAllWebAutomationCourses(GetCourseDetails courseDetails) {
+        List<WebAutomation> webAutomationCoursesList = courseDetails.getCourses().getWebAutomation();
+        List<String> courseTitlesList = new ArrayList<>();
+
+        for (WebAutomation webAutomationCourse : webAutomationCoursesList) {
+            courseTitlesList.add(webAutomationCourse.getCourseTitle());
+        }
+
+        return courseTitlesList;
+    }
+
+    /**
+     * Compares the actual list of course titles with the expected list of course titles.
+     * 
+     * @param actualCourseTitles actual list of course titles
+     * @param expectedCourseTitles expected list of course titles
+     */
+    private static void compareCourseTitles(List<String> actualCourseTitles, String[] expectedCourseTitles) {
+        List<String> expectedList = Arrays.asList(expectedCourseTitles);
+
+        try {
+            Assert.assertTrue(actualCourseTitles.equals(expectedList));
+        } catch (AssertionError e) {
+            System.out.println("Actual List of Course Titles: " + actualCourseTitles);
+            System.out.println("Expected List of Course Titles: " + expectedList);
+            throw new AssertionError("Actual List of Course Titles does not match the expected List of Course Titles");
+        }
     }
 }
 
