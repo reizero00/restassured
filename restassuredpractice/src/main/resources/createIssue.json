@@ -1,0 +1,26 @@
+{
+    "fields": {
+      "summary": "Create Issue and Attach File",
+      "issuetype": {
+        "id": "10003"
+      },
+      "project": {
+        "key": "SCRUM"
+      },
+      "description": {
+        "type": "doc",
+        "version": 1,
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "text": "Don't forget to do this too.",
+                "type": "text"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }

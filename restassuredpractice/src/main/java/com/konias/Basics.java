@@ -18,6 +18,7 @@ public class Basics {
         RestAssured.baseURI = "https://rahulshettyacademy.com";
         String addPlaceString = JsonHelper.getJsonFromFile("F:\\git\\restassured\\restassuredpractice\\src\\main\\resources\\addPlace.json");
 
+        
         String response = given()
                 .log().all()
                 .queryParam("key", "qaclick123")
