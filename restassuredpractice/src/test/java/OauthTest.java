@@ -6,14 +6,11 @@ import java.util.List;
 
 import org.testng.Assert;
 
-import com.konias.files.JsonHelper;
 import com.konias.pojo.Api;
-import com.konias.pojo.Courses;
 import com.konias.pojo.GetCourseDetails;
 import com.konias.pojo.WebAutomation;
 
 import io.restassured.RestAssured;
-import io.restassured.path.json.JsonPath;
 
 /**
  * This class demonstrates how to use Rest Assured to authenticate with OAuth2
