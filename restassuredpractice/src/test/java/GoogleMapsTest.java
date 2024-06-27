@@ -8,6 +8,10 @@ import com.konias.pojo.GooglePlaceApis.AddPlace;
 import com.konias.pojo.GooglePlaceApis.Location;
 
 import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
 
 public class GoogleMapsTest {
 
@@ -26,13 +30,13 @@ public class GoogleMapsTest {
 
     public static String addPlace(AddPlace addPlaceRequestBody) {
         return given()
-            .queryParam("key", "qaclick123")
+            .spec(rahulShettyAcademyHeader())
             .body(addPlaceRequestBody)
             .log().all()
         .when()
             .post("/maps/api/place/add/json")
         .then()
-            .statusCode(200)
+            .spec(standardResponse())
             .extract().response().asString();
     }
         
@@ -63,5 +67,22 @@ public class GoogleMapsTest {
         location.setLng(lng);
 
         return location;
+    }
+
+    private static RequestSpecification rahulShettyAcademyHeader() {
+        return new RequestSpecBuilder()
+            .setBaseUri("https://rahulshettyacademy.com")
+            .addQueryParam("key", "qaclick123")
+            .setContentType("application/json")
+            .build();
+        
+    }
+
+    private static ResponseSpecification standardResponse() {
+        return new ResponseSpecBuilder()
+            .expectStatusCode(200)
+            .expectContentType("application/json")
+            .build();
+
     }
 }
