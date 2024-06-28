@@ -2,7 +2,6 @@ import static io.restassured.RestAssured.given;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import com.konias.pojo.GooglePlaceApis.AddPlace;
 import com.konias.pojo.GooglePlaceApis.Location;
@@ -44,7 +43,7 @@ public class GoogleMapsTest {
                 .log().all()
                 .when()
                 .post("/maps/api/place/add/json")
-                .then()
+            .then()
                 .spec(getResponseSpecification())
                 .extract().response().asString();
     }

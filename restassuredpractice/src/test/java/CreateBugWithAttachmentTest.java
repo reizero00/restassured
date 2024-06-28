@@ -42,7 +42,7 @@ public class CreateBugWithAttachmentTest {
         
         // Set file paths for issue details and attachment
         final String createIssueJsonPath = "F:\\git\\restassured\\restassuredpractice\\src\\main\\resources\\createIssue.json";
-        final String attachmentPath = "F:\\git\\restassured\\restassuredpractice\\src\\main\\resources\\attachment.jpg";
+        String attachmentPath = "F:\\git\\restassured\\restassuredpractice\\src\\main\\resources\\attachment.jpg";
 
         RestAssured.baseURI = baseUri;
 
