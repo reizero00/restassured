@@ -28,7 +28,8 @@ public class ECommerceExerciseTest {
 
         String userId = loginResponse.getUserId();
 
-        String attachmentPath = "F:\\git\\restassured\\restassuredpractice\\src\\main\\resources\\attachment.jpg";
+        String basePath = System.getProperty("user.dir");
+        String attachmentPath = basePath + "/restassuredpractice/src/main/resources/attachment.jpg";
 
         CreateProductResponse createProductResponse = createProduct(loginResponse.getToken(),"Cool Product Name", userId, "fashion", "shirts", "100", "Addidas Original", "women", attachmentPath);
 
