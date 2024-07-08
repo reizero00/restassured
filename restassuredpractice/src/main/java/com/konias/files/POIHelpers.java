@@ -108,7 +108,8 @@ public class POIHelpers {
                 }
             }
         }
-
+        // Remove the first element of the test case data because it is the vertical header
+        testCaseData.remove(0);
         // Return the test case data
         return testCaseData;
     }
