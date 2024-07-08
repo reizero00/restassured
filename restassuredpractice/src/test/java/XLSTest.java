@@ -25,7 +25,7 @@ public class XLSTest {
         String attachmentPath = basePath + "/src/main/resources/xlstest.xlsx";
 
         // Read the data from the Excel file using the readExcelData method of the POIHelpers class
-        ArrayList<String> testCaseData = poiHelpers.readExcelData(attachmentPath, "Sheet1", "TestCases", "Purchase");
+        ArrayList<String> testCaseData = poiHelpers.readExcelData(attachmentPath, "Sheet1", "TestCases", "LibraryAddBook");
 
         // Print the data to the console
         System.out.println(testCaseData);

@@ -23,14 +23,17 @@ public class POIHelpers {
      * @throws Exception If an error occurs while reading the Excel file.
      */
     public ArrayList<String> readExcelData(String filePath, String sheetName, String headerName, String verticalHeaderName) throws Exception {
-        // Create a new Excel workbook
-        XSSFWorkbook workbook = new XSSFWorkbook(filePath);
-        // Get the specified sheet from the workbook
-        XSSFSheet sheet = workbook.getSheet(sheetName);
-        // Get the index of the specified header column
-        int column = getColumnIndex(sheet, headerName);
-        // Get the data from the specified row based on the column and vertical header names
-        return getRowData(sheet, column, verticalHeaderName);
+        try (
+            // Create a new Excel workbook
+            XSSFWorkbook workbook = new XSSFWorkbook(filePath)) {
+            // Get the specified sheet from the workbook
+            XSSFSheet sheet = workbook.getSheet(sheetName);
+            // Get the index of the specified header column
+            int column = getColumnIndex(sheet, headerName);
+            // Get the data from the specified row based on the column and vertical header names
+            return getRowData(sheet, column, verticalHeaderName);
+        }
+        
     }
 
 
